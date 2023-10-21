@@ -25,14 +25,29 @@ public class UserController {
     }
 
     @GetMapping("/all-user")
-    public ResponseEntity<List<User> getAllUser(){
+    public ResponseEntity<List<User>> getAllUser(){
         List<User> users=userService.getAllUser();
         if(users.isEmpty())return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
     @PutMapping("/user/{id}")
-    public String updateUser(@Valid User user,  int id){
+    public String updateUser(@Valid User user,@PathVariable int id){
+        return userService.updateUser(user,id);
+    }
 
+    @DeleteMapping("/user")
+    public String deleteUser(@RequestParam int id){
+        return userService.deleteUser(id);
+    }
+
+    @DeleteMapping("/user-name")
+    public String deleteUserName(@RequestParam int id){
+        return userService.deleteUserName(id);
+    }
+
+    @DeleteMapping("/user-age")
+    public String deleteUserAge(@RequestParam int id){
+        return userService.deleteUserAge(id);
     }
 }

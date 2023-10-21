@@ -34,4 +34,58 @@ public class UserService {
     public List<User> getAllUser(){
         return userRepo.findAll();
     }
+
+    public String updateUser(User user, int id) {
+        List<User> users =getAllUser();
+        for(User myUser:users){
+            if(myUser.getId()==id){
+                myUser.setName(user.getName().isEmpty()? myUser.getName() : user.getName());
+                myUser.setAge(user.getAge()==0 ? myUser.getAge() : user.getAge());
+                myUser.setPassword(user.getPassword().isEmpty()? myUser.getPassword() : user.getPassword());
+                userRepo.save(myUser);
+                return "User successfully updated";
+            }
+        }
+        return "Invalid user id";
+    }
+
+    private boolean isValidUser(int id){
+        List<User> users =getAllUser();
+        for(User myUser:users){
+            if(myUser.getId()==id){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String deleteUser(int id) {
+        if(isValidUser(id)) {
+            userRepo.deleteById(id);
+            return "User successfully deleted having id=" + id;
+        }
+        return "Invalid user id";
+    }
+
+    public String deleteUserName(int id) {
+        List<User> users =getAllUser();
+        for(User user:users){
+            if(user.getId()==id){
+                user.setName(null);
+                return "User name successfully deleted";
+            }
+        }
+        return "Invalid user id";
+    }
+
+    public String deleteUserAge(int id) {
+        List<User> users =getAllUser();
+        for(User user:users){
+            if(user.getId()==id){
+                user.setAge(0);
+                return "User age successfully deleted";
+            }
+        }
+        return "Invalid user id";
+    }
 }
