@@ -1,4 +1,4 @@
-<h1 align="center"> 👤RESTfulUserManagement With Authentication👤</h1>
+<h1 align="center"> 👤User Management With Authentication👤</h1>
 
 >### Framework Used 
 * [SpringBoot](javatpoint.com/spring-boot-tutorial)
