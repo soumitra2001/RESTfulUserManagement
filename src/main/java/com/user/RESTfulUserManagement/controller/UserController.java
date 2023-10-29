@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -19,8 +20,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/user")
-    public ResponseEntity<String> addUser(@Valid SignUpInfo info){
+    @PostMapping("/auth/signup")
+    public ResponseEntity<String> addUser(@Valid @RequestBody SignUpInfo info){
         return userService.addUser(info);
     }
 
@@ -32,7 +33,7 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public String updateUser(@Valid User user,@PathVariable int id){
+    public String updateUser(@Valid @RequestBody User user,@PathVariable int id){
         return userService.updateUser(user,id);
     }
 
@@ -50,4 +51,15 @@ public class UserController {
     public String deleteUserAge(@RequestParam int id){
         return userService.deleteUserAge(id);
     }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable int id){
+        return userService.getUserById(id);
+    }
+
+    @GetMapping("/current-user")
+    public String getCurrentUser(Principal principal){
+        return principal.getName();
+    }
+
 }

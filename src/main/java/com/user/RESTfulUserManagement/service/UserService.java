@@ -3,18 +3,26 @@ package com.user.RESTfulUserManagement.service;
 import com.user.RESTfulUserManagement.dto.SignUpInfo;
 import com.user.RESTfulUserManagement.model.User;
 import com.user.RESTfulUserManagement.repository.IUserRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     @Autowired
     private IUserRepo userRepo;
+
     public ResponseEntity<String> addUser(SignUpInfo info) {
         List<User> users=getAllUser();
         for(User myUser:users){
@@ -88,4 +96,32 @@ public class UserService {
         }
         return "Invalid user id";
     }
+
+
+    public ResponseEntity<User> getUserById(int id) {
+        List<User> users =getAllUser();
+        for(User user:users){
+            if(user.getId()==id){
+                return new ResponseEntity<>(user,HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(){
+        return new UserDetailsService() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                return userRepo.findByEmail(username);
+
+            }
+        };
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public String usernameNotFoundException(){
+        return "Invalid username or password";
+    }
+
 }
